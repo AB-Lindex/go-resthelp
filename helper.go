@@ -1,6 +1,7 @@
 package resthelp
 
 import (
+	"encoding/base64"
 	"net/http"
 	"time"
 )
@@ -71,4 +72,14 @@ func WithParser(mimeType string, fn Parser) func(*Helper) {
 		}
 		h.parsers[mimeType] = fn
 	}
+}
+
+func basicAuth(username, password string) string {
+	auth := username + ":" + password
+	return base64.StdEncoding.EncodeToString([]byte(auth))
+}
+
+// WithBasicAuth sets the Authorization header with the given username and password.
+func WithBasicAuth(username, password string) func(*Helper) {
+	return WithHeader("Authorization", "Basic "+basicAuth(username, password))
 }
