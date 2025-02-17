@@ -97,6 +97,13 @@ func (h *Helper) NewRequest(method, path string, opts ...RequestOption) (*Reques
 		r.req.Header.Add(k, v)
 	}
 
+	// apply query-parameters to request
+	q := r.req.URL.Query()
+	for k, v := range r.query {
+		q.Add(k, v)
+	}
+	r.req.URL.RawQuery = q.Encode()
+
 	return r, nil
 }
 
